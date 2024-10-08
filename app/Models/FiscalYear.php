@@ -10,5 +10,5 @@ class FiscalYear extends Model
     use HasFactory;
 
     public int $id;
-    public string $year;
+    public int $year;
 }

@@ -9,6 +9,6 @@ class MemberType extends Model
 {
     use HasFactory;
 
-    public int $id;
-    public string $type;
+    public $id;
+    public $type;
 }

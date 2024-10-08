@@ -9,12 +9,12 @@ class FamilyMember extends Model
 {
     use HasFactory;
 
-    public int $id;
-    public int $familyId;
+    public $id;
+    public $familyId;
 
-    public string $name;
-    public string $dateOfBirth;
-    public string $memberType;
+    public $name;
+    public $dateOfBirth;
+    public $memberTypeId;
 
 
     /**
@@ -23,5 +23,13 @@ class FamilyMember extends Model
     public function family()
     {
         return $this->belongsTo(Family::class);
+    }
+
+    /**
+     * Get the member type that this family member belongs to.
+     */
+    public function memberType()
+    {
+        return $this->belongsTo(MemberType::class);
     }
 }

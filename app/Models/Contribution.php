@@ -11,7 +11,7 @@ class Contribution extends Model
 
     public int $id;
     public int $age;
-    public int $memberType;
+    public int $memberTypeId;
     public float $amount;
     public int $fiscalYear;
 }
