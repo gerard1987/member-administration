@@ -21,12 +21,21 @@
                                         <p class="card-text"><strong>Birthday:</strong> {{ $member['date_of_birth']  }}</p>
                                         <p class="card-text"><strong>Member id:</strong> {{ $member['member_type_id']  }}</p>
                                         <p>
-                                            <a href="{{ route('families.members.view', $member['id']) }}" class="btn btn-primary">Edit</a>
-                                            <a href="{{ route('families.members.view', $member['id']) }}" class="btn btn-warning">Delete</a>
+                                            <a href="{{ route('families.members.view',  [$family['id'], $member['id']]) }}" class="btn btn-primary">Edit</a>
+                                            <form action="{{ route('families.members.delete', [$family['id'], $member['id']]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-warning">Delete</button>
+                                            </form>
                                         </p>
                                     </div>
                                 </div>
                                 @endforeach
+                                @if (session('status'))
+                                    <div class="alert alert-success">
+                                        {{ session('status') }}
+                                    </div>
+                                @endif
                             </a>
                         </div>
                     </div>
