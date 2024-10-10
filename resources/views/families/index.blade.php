@@ -1,34 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family List</title>
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Family overview')
+@section('content')
 
     <h1>Families and Members</h1>
+    <hr>
 
     @if($families->isEmpty())
         <p>No families found.</p>
     @else
-        @foreach($families as $family)
-            <div class="family-card">
-                <h2>{{ $family->name }}</h2>
-                <p><strong>Address:</strong> {{ $family->adress }}</p>
-
-                @if($family->familyMembers->isEmpty())
-                    <p>No family members found.</p>
-                @else
-                    <ul>
-                        @foreach($family->familyMembers as $member)
-                            <li>{{ $member->name }} ({{ $member->age }} years old)</li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
-        @endforeach
+        <div class="row">
+            @foreach($families as $family)
+                <div class="col-md-6">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ $family['name'] }}</h2>
+                            <p class="card-text"><strong>Address:</strong> {{ $family['adress'] }}</p>
+                            <p>
+                                <a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">Edit</a>
+                                <a href="{{ route('families.view', $family['id']) }}" class="btn btn-warning">Delete</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     @endif
-
-</body>
-</html>
+@endsection

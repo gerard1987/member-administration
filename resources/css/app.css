@@ -1,0 +1,56 @@
+/* Reset some default browser styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 40px;
+}
+
+.family-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.family-card h2 {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.family-card p {
+    color: #7f8c8d;
+    font-size: 16px;
+}
+
+.family-card strong {
+    color: #34495e;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .family-card {
+        padding: 15px;
+    }
+}

@@ -12,7 +12,7 @@ class FamilySeeder extends Seeder
     {
         // Create 10 families
         Family::factory(10)
-        ->has(FamilyMember::factory()->count(5))
+        ->has(FamilyMember::factory()->count(rand(1, 6)))
         ->create();
     }
 }
