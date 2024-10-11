@@ -5,6 +5,35 @@
     <h1>Families and Members</h1>
     <hr>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-12 shadow-sm">
+                <div class="card-body">
+                    <form action="{{ route('families.create') }}" method="POST">
+                        @csrf
+                        @method('POST')
+                    
+                        <!-- Family Name Input -->
+                        <div class="form-group">
+                            <label for="name">Family Name:</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                    
+                        <!-- Address Input -->
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" id="adress" name="adress" class="form-control" required>
+                        </div>
+                    
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-warning">Create Family</button>
+                    </form>
+                </div>            
+            </div>
+        </div>
+    </div>
+    <br>
+
     @if($families->isEmpty())
         <p>No families found.</p>
     @else

@@ -12,6 +12,47 @@
                         <h2 class="card-title"><strong>Family:</strong> {{ $family['name'] }}</h2>
                         <p class="card-text"><strong>Address:</strong> {{ $family['adress']  }}</p>
                         <hr>
+
+                        <h3>Add member</h3>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card mb-12 shadow-sm">
+                                    <div class="card-body">
+                                        <form action="{{ route('families.create.member', $family['id']) }}" method="POST">
+                                            @csrf
+                                            @method('POST')
+                                        
+                                            <!-- Name Input -->
+                                            <div class="form-group">
+                                                <label for="name">Name:</label>
+                                                <input type="text" id="name" name="name" class="form-control" required>
+                                            </div>
+                                        
+                                            <!-- Address Input -->
+                                            <div class="form-group">
+                                                <label for="address">Date of birth:</label>
+                                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+                                            </div>
+
+                                            <!-- Address Input -->
+                                            <div class="form-group">
+                                                <label for="address">Member type id:</label>
+                                                <input type="number" id="member_type_id" name="member_type_id" class="form-control" required>
+                                            </div>
+
+                                            <br>
+
+                                            <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
+                                        
+                                            <!-- Submit Button -->
+                                            <button type="submit" class="btn btn-warning">Create Family</button>
+                                        </form>
+                                    </div>            
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
                         <h3>Members</h3>
                         <div class="d-flex align-items-center">
                                 @foreach ($family['familyMembers'] as $member)

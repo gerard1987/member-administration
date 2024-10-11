@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Family;
 
 class FamilyController extends Controller
@@ -13,6 +14,36 @@ class FamilyController extends Controller
         
         return view('families.index', compact('families'));
     }
+
+    public function create(Request $request)
+    {
+        try 
+        {
+            // Check if the request method is POST
+            if ($request->isMethod('post')) {
+                // Validate the form inputs
+                $validatedData = $request->validate([
+                    'name' => 'required|string|max:255',
+                    'adress' => 'required|string|max:255',
+                ]);
+
+                $family = new Family();
+                $family['name'] = $request->input('name');
+                $family['adress'] = $request->input('adress');
+                $family->save();
+
+                session()->flash('status', 'Family created successfully!');
+                
+                return redirect()->route('families.index');
+            }
+        }
+        catch (Exception $ex)
+        {
+            session()->flash('status', 'Internal server error');
+                
+            return redirect()->route('families.index');
+        }
+    }    
 
     public function view($id)
     {
@@ -37,7 +68,6 @@ class FamilyController extends Controller
         $family->delete();  // Delete the family itself
     
         // Set a flash message
-        // $request->session()->flash('status', 'Family has been successfully deleted!');?
         session()->flash('status', 'Family has been successfully deleted!');
     
         // Redirect to the index page
