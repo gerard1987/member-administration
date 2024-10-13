@@ -72,11 +72,6 @@
                                     </div>
                                 </div>
                                 @endforeach
-                                @if (session('status'))
-                                    <div class="alert alert-success">
-                                        {{ session('status') }}
-                                    </div>
-                                @endif
                             </a>
                         </div>
                     </div>
@@ -84,5 +79,9 @@
             </div>
         </div>
     @endif
+
+    <div class="row">
+        <x-flash-message />
+    </div>
 
 @endsection

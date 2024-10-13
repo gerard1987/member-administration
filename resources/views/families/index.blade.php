@@ -24,6 +24,7 @@
                             <label for="address">Address:</label>
                             <input type="text" id="adress" name="adress" class="form-control" required>
                         </div>
+                        <br>
                     
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-warning">Create Family</button>
@@ -56,11 +57,10 @@
                     </div>
                 </div>
             @endforeach
-            @if (session('status'))
-                <div class="alert alert-success">
-                    {{ session('status') }}
-                </div>
-            @endif
         </div>
     @endif
+    <div class="row">
+        <x-flash-message />
+    </div>
+
 @endsection

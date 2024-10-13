@@ -32,7 +32,7 @@ class FamilyController extends Controller
                 $family['adress'] = $request->input('adress');
                 $family->save();
 
-                session()->flash('status', 'Family created successfully!');
+                session()->flash('status', ['type' => 'success', 'message' => 'Family created successfully!']);
                 
                 return redirect()->route('families.index');
             }
@@ -59,17 +59,23 @@ class FamilyController extends Controller
 
     public function delete($id)
     {
-        $family = Family::with('familyMembers')->find($id);
-        if (!$family) {
-            abort(404, 'Family not found');
+        try 
+        {
+            $family = Family::with('familyMembers')->find($id);
+            if (!$family) {
+                abort(404, 'Family not found');
+            }
+        
+            $family->familyMembers()->delete();  // Delete family members if necessary
+            $family->delete();
+        
+            session()->flash('status', ['type' => 'success', 'message' => 'Family has been successfully deleted!']);
         }
-    
-        $family->familyMembers()->delete();  // Delete family members if necessary
-        $family->delete();  // Delete the family itself
-    
-        // Set a flash message
-        session()->flash('status', 'Family has been successfully deleted!');
-    
+        catch(Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Family could not be deleted!']);
+        }
+
         // Redirect to the index page
         return redirect()->route('families.index');
     }

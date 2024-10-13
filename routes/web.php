@@ -6,8 +6,8 @@ use App\Http\Controllers\FamilyMemberController;
 
 Route::get('/', [FamilyController::class, 'index']);
 Route::get('/families', [FamilyController::class, 'index'])->name('families.index');
-Route::post('/families', [FamilyController::class, 'create'])->name('families.create');
 Route::get('/families/{id}', [FamilyController::class, 'view'])->name('families.view');
+Route::post('/families', [FamilyController::class, 'create'])->name('families.create');
 Route::delete('/families/{id}', [FamilyController::class, 'delete'])->name('families.delete');
 
 Route::get('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'view'])->name('families.members.view');

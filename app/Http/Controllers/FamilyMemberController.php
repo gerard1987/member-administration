@@ -34,21 +34,21 @@ class FamilyMemberController extends Controller
                     'family_id' => 'required|integer'
                 ]);
 
-                $family = new FamilyMember();
-                $family['name'] = $request->input('name');
-                $family['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $family['member_type_id'] = $request->input('member_type_id');
-                $family['family_id'] = $request->input('family_id');
-                $family->save();
+                $member = new FamilyMember();
+                $member['name'] = $request->input('name');
+                $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
+                $member['member_type_id'] = $request->input('member_type_id');
+                $member['family_id'] = $request->input('family_id');
+                $member->save();
 
-                session()->flash('status', 'Family created successfully!');
+                session()->flash('status', ['type' => 'success', 'message' => 'Family member created successfully!']);
                 
-                return redirect()->route('families.view', ['id' => $request->route('id')]);
+                return redirect()->route('families.view', ['id' => $member['family_id']]);
             }
         }
         catch (Exception $ex)
         {
-            session()->flash('status', 'Internal server error');
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
             return redirect()->route('families.view', ['id' => $request->route('id')]);
         }
@@ -75,14 +75,14 @@ class FamilyMemberController extends Controller
                 $member['member_type_id'] = $request->input('member_type_id');
                 $member->save();
 
-                session()->flash('status', 'Family edited successfully!');
+                session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
                 
                 return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
             }
         }
         catch (Exception $ex)
         {
-            session()->flash('status', 'Internal server error');
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
             return redirect()->route('families.view', ['id' => $request->route('id')]);
         }
@@ -90,15 +90,21 @@ class FamilyMemberController extends Controller
 
     public function delete($family_id, $member_id)
     {
-        $member = FamilyMember::find($member_id);
-        if (!$member) {
-            abort(404, 'Family not found');
+        try 
+        {
+            $member = FamilyMember::find($member_id);
+            if (!$member) {
+                abort(404, 'Family not found');
+            }
+        
+            $member->delete();
+        
+            session()->flash('status', ['type' => 'success', 'message' => 'Family member has been successfully deleted!']);
         }
-    
-        $member->delete();
-    
-        // Set a flash message
-        session()->flash('status', 'Family member has been successfully deleted!');
+        catch(Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+        }
     
         // Redirect to the index page
         return redirect()->route('families.view', ['id' => $family_id]);
