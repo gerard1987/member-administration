@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('member_types', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
+            $table->enum('type', ['member', 'prospective_member', 'honorary_member', 'family_member']);
             $table->timestamps();
         });
     }

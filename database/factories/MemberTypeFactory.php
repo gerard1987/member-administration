@@ -9,10 +9,22 @@ class MemberTypeFactory extends Factory
 {
     protected $model = MemberType::class;
 
-    public function definition(): array
+    protected static $enumValues = ['member', 'prospective_member', 'honorary_member', 'family_member'];
+
+    public function definition()
     {
         return [
-            'type' => $this->faker->randomElement(['member', 'prospective_member', 'honorary_member', 'family_member']),
+            'type' => null,  // The status will be set outside the definition
         ];
+    }
+
+    // A method to generate all enum values in the factory
+    public function withEnumValues()
+    {
+        return collect(self::$enumValues)->map(function ($enumValue) {
+            return $this->state([
+                'type' => $enumValue
+            ]);
+        });
     }
 }

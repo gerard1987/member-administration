@@ -14,10 +14,10 @@ class FamilyMemberFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->firstName, // Generate a random first name
-            'date_of_birth' => $this->faker->date, // Generate a random date of birth
+            'name' => $this->faker->firstName,
+            'date_of_birth' => $this->faker->date,
             'member_type_id' => rand(1, 4),
-            'family_id' => Family::factory(), // This will be set in the seeder
+            'family_id' => Family::factory(),
         ];
     }
 }

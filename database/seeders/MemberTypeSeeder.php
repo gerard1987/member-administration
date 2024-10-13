@@ -15,8 +15,8 @@ class MemberTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        MemberType::factory()
-            ->count(4)
-            ->create();
+        MemberType::factory()->withEnumValues()->each(function ($factory) {
+            $factory->create();
+        });
     }
 }
