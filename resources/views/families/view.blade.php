@@ -9,8 +9,39 @@
             <div class="col-md-12">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
+
                         <h2 class="card-title"><strong>Family:</strong> {{ $family['name'] }}</h2>
                         <p class="card-text"><strong>Address:</strong> {{ $family['adress']  }}</p>
+
+                        <hr>
+
+                        <h3>Edit family</h3>
+                        <div class="row">
+                            <form action="{{ route('families.edit', ['id' => $family['id']]) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                            
+                                <!-- Name Input -->
+                                <div class="form-group">
+                                    <label for="name">Name:</label>
+                                    <input type="text" id="name" name="name" value="<?= $family['name']; ?>" class="form-control" required>
+                                </div>
+                            
+                                <!-- Address Input -->
+                                <div class="form-group">
+                                    <label for="address">Address:</label>
+                                    <input type="text" id="adress" name="adress" value="<?= $family['adress']; ?>" class="form-control" required>
+                                </div>
+    
+                                <br>
+    
+                                <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
+                            
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-warning">Edit family</button>
+                            </form>
+                        </div>
+                        
                         <hr>
 
                         <h3>Add member</h3>
@@ -45,13 +76,15 @@
                                             <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
                                         
                                             <!-- Submit Button -->
-                                            <button type="submit" class="btn btn-warning">Create Family</button>
+                                            <button type="submit" class="btn btn-warning">Create family member</button>
                                         </form>
                                     </div>            
                                 </div>
                             </div>
                         </div>
                         <br>
+
+                        <hr>
 
                         <h3>Members</h3>
                         <div class="d-flex align-items-center">

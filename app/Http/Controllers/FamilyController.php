@@ -57,6 +57,37 @@ class FamilyController extends Controller
         return view('families.view', compact('family'));
     }
 
+    public function edit(Request $request)
+    {
+        try 
+        {
+            // Check if the request method is POST
+            if ($request->isMethod('post')) {
+
+                // Validate the form inputs
+                $validatedData = $request->validate([
+                    'name' => 'required|string|max:255',
+                    'adress' => 'required|string|max:255',
+                ]);
+
+                $family = Family::find($request->input('family_id'));
+                $family['name'] = $request->input('name');
+                $family['adress'] =  $request->input('adress');
+                $family->save();
+
+                session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
+                
+                return redirect()->route('families.view', ['id' => $family['id']]);
+            }
+        }
+        catch (Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+                
+            return redirect()->route('families.view', ['id' => $request->route('id')]);
+        }
+    }    
+
     public function delete($id)
     {
         try 

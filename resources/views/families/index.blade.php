@@ -5,6 +5,7 @@
     <h1>Families and Members</h1>
     <hr>
 
+    <h3>Create family</h3>
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-12 shadow-sm">
@@ -38,6 +39,7 @@
     @if($families->isEmpty())
         <p>No families found.</p>
     @else
+        <h3>Overview</h3>
         <div class="row">
             @foreach($families as $family)
                 <div class="col-md-6">
