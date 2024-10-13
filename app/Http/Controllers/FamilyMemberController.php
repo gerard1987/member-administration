@@ -63,23 +63,21 @@ class FamilyMemberController extends Controller
 
                 // Validate the form inputs
                 $validatedData = $request->validate([
-                    'id' => 'required|integer',
+                    'member_id' => 'required|integer',
                     'name' => 'required|string|max:255',
                     'date_of_birth' => 'required|string|max:255',
-                    'member_type_id' => 'required|integer',
-                    'family_id' => 'required|integer'
+                    'member_type_id' => 'required|integer'
                 ]);
 
-                $family = FamilyMember::find($request->input('id'));
-                $family['name'] = $request->input('name');
-                $family['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $family['member_type_id'] = $request->input('member_type_id');
-                $family['family_id'] = $request->input('family_id');
-                $family->save();
+                $member = FamilyMember::find($request->input('member_id'));
+                $member['name'] = $request->input('name');
+                $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
+                $member['member_type_id'] = $request->input('member_type_id');
+                $member->save();
 
-                session()->flash('status', 'Family created successfully!');
+                session()->flash('status', 'Family edited successfully!');
                 
-                return redirect()->route('families.view', ['id' => $request->route('id')]);
+                return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
             }
         }
         catch (Exception $ex)

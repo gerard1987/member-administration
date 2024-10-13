@@ -12,4 +12,5 @@ Route::delete('/families/{id}', [FamilyController::class, 'delete'])->name('fami
 
 Route::get('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'view'])->name('families.members.view');
 Route::post('/families/{id}/family_member', [FamilyMemberController::class, 'create'])->name('families.create.member');
+Route::post('/families/{family_id}/members/{member_id}/edit', [FamilyMemberController::class, 'edit'])->name('families.members.edit');
 Route::delete('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'delete'])->name('families.members.delete');
