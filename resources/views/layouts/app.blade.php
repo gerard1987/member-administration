@@ -27,6 +27,7 @@
 
     <!-- Main Content -->
     <div class="container mt-5">
+        <x-flash-message />
         @yield('content')
     </div>
 

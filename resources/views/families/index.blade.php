@@ -72,8 +72,5 @@
             @endforeach
         </div>
     @endif
-    <div class="row">
-        <x-flash-message />
-    </div>
 
 @endsection
