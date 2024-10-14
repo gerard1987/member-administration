@@ -39,7 +39,7 @@ class FamilyController extends Controller
         }
         catch (Exception $ex)
         {
-            session()->flash('status', 'Internal server error');
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
             return redirect()->route('families.index');
         }

@@ -3,6 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FamilyMemberController;
+use App\Http\Controllers\AuthController;
+
+Route::get('/login', [AuthController::class, 'login_index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Show the registration form
+Route::get('/register', [AuthController::class, 'register_index'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::get('/', [FamilyController::class, 'index']);
 Route::get('/families', [FamilyController::class, 'index'])->name('families.index');
