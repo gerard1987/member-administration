@@ -45,16 +45,27 @@
                 <div class="col-md-6">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body">
-                            <h2 class="card-title">{{ $family['name'] }}</h2>
-                            <p class="card-text"><strong>Address:</strong> {{ $family['adress'] }}</p>
-                            <p>
-                                <a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">Edit</a>
-                                <form action="{{ route('families.delete', $family['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this family?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-warning">Delete Family</button>
-                                </form>
-                            </p>
+                            <div class="d-flex col-md-12">
+                                <div class="col-md-8">
+                                    <h2 class="card-title">{{ $family['name'] }}</h2>
+                                    <p class="card-text"><strong>Address:</strong> {{ $family['adress'] }}</p>
+                                </div>
+                                <div class="d-flex flex-wrap col-md-4">
+                                    <p>Contributie: €0</p>
+                                    <div class="d-flex flex-wrap align-items-end col-md-12">
+                                        <div class="col-md-4">
+                                            <p class="mb-0"><a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">Edit</a></p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <form action="{{ route('families.delete', $family['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this family?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-warning text-nowrap">Delete Family</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
