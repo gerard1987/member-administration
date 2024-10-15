@@ -9,6 +9,8 @@ class FamilyMember extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'date_of_birth', 'family_type', 'family_id', 'member_type_id'];
+
     public $id;
     public $familyId;
 

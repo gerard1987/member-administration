@@ -34,9 +34,44 @@
 
                             <!-- Member type Input -->
                             <div class="form-group">
-                                <label for="address">Member type id:</label>
-                                <input type="number" id="member_type_id" name="member_type_id" value="<?= $member['member_type_id']; ?>" class="form-control" required>
+                                <label for="address">Member type:</label>
+                                <input type="text" id="member_type_id" name="member_type_id" value="<?= $member["memberType"]["type"]; ?>" class="form-control" required>
                             </div>
+
+                            <br>
+
+                            <input type="hidden" id="member_id" name="member_id" value ="<?= $member['id']; ?>" class="form-control" required>
+                            <input type="hidden" id="family_id" name="family_id" value ="<?= $member['family_id']; ?>" class="form-control" required>
+                        
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-warning">Edit member</button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title"><strong>Add contribution: </strong></h2>
+                        <form action="{{ route('families.members.edit', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
+                            @csrf
+                            @method('POST')
+                        
+                            <!-- Amount Input -->
+                            <div class="form-group">
+                                <label for="name">amount:</label>
+                                <input type="text" id="amount" name="amount" value="" class="form-control" required>
+                            </div>
+
+                            <!-- Fiscal years Input -->
+                            <div class="form-group">
+                                <label for="name">Fiscal year:</label>
+                                <select name="fiscal_year" id="fiscal_year" class="form-control" required>
+                                    @if (!empty($fiscalYears))
+                                        @foreach ($fiscalYears as $fiscalYear)
+                                            <option value="{{ $fiscalYear["id"] }}">{{ $fiscalYear["year"] }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            
+                            </div>
+                            
 
                             <br>
 

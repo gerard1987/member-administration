@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FamilyMember;
+use App\Models\FiscalYear;
 
 class FamilyMemberController extends Controller
 {
     public function view($family_id, $member_id)
     {
-        $member = FamilyMember::find($member_id);
-
+        // $member = FamilyMember::find($member_id);
+        $member = FamilyMember::with('memberType')->find($member_id);
         if (!$member) {
             abort(404, 'Family not found');
         }
 
+        $fiscalYears = FiscalYear::select('id', 'year')->get();
+
         // Return the view with the family data
-        return view('familymembers.view', compact('member'));
+        return view('familymembers.view', compact('member', 'fiscalYears'));
     }
 
     public function create(Request $request)
