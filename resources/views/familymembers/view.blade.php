@@ -20,13 +20,19 @@
                                 <input type="text" id="name" name="name" value="<?= $member['name']; ?>" class="form-control" required>
                             </div>
                         
-                            <!-- Address Input -->
+                            <!-- Date of birth Input -->
                             <div class="form-group">
                                 <label for="address">Date of birth:</label>
                                 <input type="date" id="date_of_birth" name="date_of_birth" value="<?= $member['date_of_birth']; ?>" class="form-control" required>
                             </div>
 
-                            <!-- Address Input -->
+                            <!-- Family type Input -->
+                            <div class="form-group">
+                                <label for="name">Family type:</label>
+                                <input type="text" id="name" name="name" value="<?= $member['family_type']; ?>" class="form-control" required>
+                            </div>
+
+                            <!-- Member type Input -->
                             <div class="form-group">
                                 <label for="address">Member type id:</label>
                                 <input type="number" id="member_type_id" name="member_type_id" value="<?= $member['member_type_id']; ?>" class="form-control" required>

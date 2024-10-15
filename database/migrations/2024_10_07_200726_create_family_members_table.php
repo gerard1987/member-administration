@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();  // Auto-incrementing primary key
             $table->string('name');
             $table->date('date_of_birth');
+            $table->string('family_type');
             $table->foreignId('member_type_id');
             $table->foreignId('family_id')->constrained()->onDelete('cascade');  // Foreign key referencing the families table
             $table->timestamps();  // Created_at and updated_at columns

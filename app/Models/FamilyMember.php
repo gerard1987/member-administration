@@ -14,6 +14,7 @@ class FamilyMember extends Model
 
     public $name;
     public $dateOfBirth;
+    public $familyType;
     public $memberTypeId;
 
 
