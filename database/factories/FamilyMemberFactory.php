@@ -22,13 +22,14 @@ class FamilyMemberFactory extends Factory
 
         // Determine the member type based on the age
         $memberTypeId = $this->getMemberTypeByAge($age);
+        $familyType = $this->getFamilyTypeByAge($age);
 
         return [
             'name' => $this->faker->firstName,
             'date_of_birth' => $dateOfBirth,
             'member_type_id' => $memberTypeId,
             'family_id' => Family::factory(),
-            'family_type' => $this->faker->randomElement(self::$enumValues)
+            'family_type' => $familyType
         ];
     }
 
@@ -46,4 +47,14 @@ class FamilyMemberFactory extends Factory
             return 5; // Elder
         }
     }
+
+    private function getFamilyTypeByAge($age)
+    {
+        if ($age <= 21){
+            return rand(0, 1) ? 'Son' : 'Daughter';
+        }
+        else {
+            return rand(0, 1) ? 'Father' : 'Mother';
+        }
+    }    
 }

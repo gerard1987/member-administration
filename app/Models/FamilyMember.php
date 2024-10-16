@@ -47,5 +47,5 @@ class FamilyMember extends Model
         $age = $currentDate->diff($birthdateDateTime)->y;
     
         return $age;
-    }
+    }    
 }
