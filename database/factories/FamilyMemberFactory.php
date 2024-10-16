@@ -1,10 +1,9 @@
-<?php
+<?php 
 
 namespace Database\Factories;
 
-use App\Models\Family;
 use App\Models\FamilyMember;
-use App\Models\MemberType; 
+use App\Models\Family;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FamilyMemberFactory extends Factory
@@ -14,12 +13,37 @@ class FamilyMemberFactory extends Factory
 
     public function definition()
     {
+        // Generate a random date of birth within a reasonable range
+        $dateOfBirth = $this->faker->date();
+
+        // Create a FamilyMember instance to calculate age
+        $member = new FamilyMember(['date_of_birth' => $dateOfBirth]);
+        $age = $member->getAge();
+
+        // Determine the member type based on the age
+        $memberTypeId = $this->getMemberTypeByAge($age);
+
         return [
             'name' => $this->faker->firstName,
-            'date_of_birth' => $this->faker->date,
-            'member_type_id' => rand(1, 4),
+            'date_of_birth' => $dateOfBirth,
+            'member_type_id' => $memberTypeId,
             'family_id' => Family::factory(),
             'family_type' => $this->faker->randomElement(self::$enumValues)
         ];
+    }
+
+    private function getMemberTypeByAge($age)
+    {
+        if ($age < 8) {
+            return 1; // Youth
+        } elseif ($age >= 8 && $age <= 12) {
+            return 2; // Aspirant
+        } elseif ($age >= 13 && $age <= 17) {
+            return 3; // Junior
+        } elseif ($age >= 18 && $age <= 50) {
+            return 4; // Senior
+        } else {
+            return 5; // Elder
+        }
     }
 }
