@@ -9,7 +9,7 @@ class MemberTypeFactory extends Factory
 {
     protected $model = MemberType::class;
 
-    protected static $enumValues = ['member', 'prospective_member', 'honorary_member', 'family_member'];
+    protected static $enumValues = ['youth', 'aspirant', 'junior', 'senior', 'elder'];
 
     public function definition()
     {

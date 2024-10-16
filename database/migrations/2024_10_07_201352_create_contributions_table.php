@@ -17,6 +17,7 @@ return new class extends Migration
             $table->float('amount');
             $table->foreignId('member_type_id');
             $table->foreignId('fiscal_year');
+            $table->foreignId('family_member_id');
             $table->timestamps();
         });
     }

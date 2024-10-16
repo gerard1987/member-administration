@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTime;
+
 class FamilyMember extends Model
 {
     use HasFactory;
@@ -34,5 +36,16 @@ class FamilyMember extends Model
     public function memberType()
     {
         return $this->belongsTo(MemberType::class);
+    }
+
+    public function getAge()
+    {
+        $birthdateDateTime = new DateTime($this->date_of_birth);
+        $currentDate = new DateTime();
+    
+        // Calculate the age by finding the difference in years
+        $age = $currentDate->diff($birthdateDateTime)->y;
+    
+        return $age;
     }
 }

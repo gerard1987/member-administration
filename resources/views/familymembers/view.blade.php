@@ -48,16 +48,10 @@
                         </form>
                     </div>
                     <div class="card-body">
-                        <h2 class="card-title"><strong>Add contribution: </strong></h2>
-                        <form action="{{ route('families.members.edit', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
+                        <h2 class="card-title"><strong>Submit contribution paid: </strong></h2>
+                        <form action="{{ route('families.members.add.contribution', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
                             @csrf
                             @method('POST')
-                        
-                            <!-- Amount Input -->
-                            <div class="form-group">
-                                <label for="name">amount:</label>
-                                <input type="text" id="amount" name="amount" value="" class="form-control" required>
-                            </div>
 
                             <!-- Fiscal years Input -->
                             <div class="form-group">
@@ -69,9 +63,7 @@
                                         @endforeach
                                     @endif
                                 </select>
-                            
                             </div>
-                            
 
                             <br>
 
@@ -79,7 +71,7 @@
                             <input type="hidden" id="family_id" name="family_id" value ="<?= $member['family_id']; ?>" class="form-control" required>
                         
                             <!-- Submit Button -->
-                            <button type="submit" class="btn btn-warning">Edit member</button>
+                            <button type="submit" class="btn btn-warning">Submit</button>
                         </form>
                     </div>
                 </div>
