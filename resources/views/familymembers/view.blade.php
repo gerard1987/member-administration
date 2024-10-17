@@ -10,6 +10,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <h2 class="card-title"><strong>Member: </strong> {{ $member['name'] }}</h2>
+                        <h3>Age: <?= $member->getAge(); ?></h3>
                         <form action="{{ route('families.members.edit', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
                             @csrf
                             @method('POST')
@@ -28,8 +29,14 @@
 
                             <!-- Family type Input -->
                             <div class="form-group">
-                                <label for="name">Family type:</label>
-                                <input type="text" id="name" name="name" value="<?= $member['family_role']; ?>" class="form-control" required>
+                                <label for="family_role">Family role:</label>
+                                <select name="family_role" id="family_role" class="form-control" required>
+                                    @foreach ($familyRoles as $familyRole)
+                                        <option value="{{ $familyRole }}" @selected($familyRole == ($member['family_role'] ?? ''))>
+                                            {{ $familyRole }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <br>
@@ -54,6 +61,18 @@
                                     @if (!empty($fiscalYears))
                                         @foreach ($fiscalYears as $fiscalYear)
                                             <option value="{{ $fiscalYear["id"] }}">{{ $fiscalYear["year"] }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Member type Input -->
+                            <div class="form-group">
+                                <label for="name">Member type:</label>
+                                <select name="member_type" id="member_type" class="form-control" required>
+                                    @if (!empty($memberTypes))
+                                        @foreach ($memberTypes as $k => $memberType)
+                                            <option value="{{ $memberType["id"] }}">{{ $memberType["type"] }}</option>
                                         @endforeach
                                     @endif
                                 </select>

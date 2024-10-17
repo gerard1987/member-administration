@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use Exception;
 use App\Models\MemberType;
 
 class Contribution extends Model
@@ -23,12 +22,8 @@ class Contribution extends Model
 
     private const BASEAMOUNT = 100;
 
-    public static function calculateContributionForMember(FamilyMember $member)
+    public static function calculateContributionForMember(int $age, string $memberType)
     {
-        $age = $member->getAge();
-
-        $memberType = MemberType::findOrFail($member['member_type_id'])["type"] ?? throw new Exception("No membertype found!"); 
-
         $discount = match(true) 
         {
             $memberType === "youth" && $age < 8 => 50,                   // 50% discount for youth under 8
@@ -36,7 +31,7 @@ class Contribution extends Model
             $memberType === "junior" && $age >= 13 && $age <= 17 => 25,  // 25% discount for juniors (13-17)
             $memberType === "senior" && $age >= 18 && $age <= 50 => 0,   // 0% discount for seniors (18-50)
             $memberType === "elder" && $age >= 51 => 45,                 // 45% discount for elders 51+
-            default => throw new Exception("Invalid age or member type"),
+            default => throw new \InvalidArgumentException("Invalid member type for age"),
         };
         
         return self::applyDiscount($discount);

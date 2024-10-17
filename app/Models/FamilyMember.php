@@ -12,6 +12,7 @@ class FamilyMember extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'date_of_birth', 'family_role', 'family_id'];
+    protected static $roles = ['Father', 'Mother', 'Son', 'Daughter'];
 
     public $id;
     public $familyId;
@@ -38,5 +39,10 @@ class FamilyMember extends Model
         $age = $currentDate->diff($birthdateDateTime)->y;
     
         return $age;
-    }    
+    }
+
+    public static function getRoles()
+    {
+        return self::$roles;
+    }
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\FamilyMember;
 use App\Models\FiscalYear;
 use App\Models\Contribution;
+use App\Models\MemberType;
+
 
 class FamilyMemberController extends Controller
 {
@@ -16,10 +18,12 @@ class FamilyMemberController extends Controller
             abort(404, 'Family not found');
         }
 
+        $familyRoles = FamilyMember::getRoles();
         $fiscalYears = FiscalYear::select('id', 'year')->get();
+        $memberTypes = MemberType::all();
 
         // Return the view with the family data
-        return view('familymembers.view', compact('member', 'fiscalYears'));
+        return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
     }
 
     public function create(Request $request)
@@ -118,12 +122,18 @@ class FamilyMemberController extends Controller
 
                 // Validate the form inputs
                 $validatedData = $request->validate([
-                    'member_id' => 'required|integer',  
-                    'fiscal_year' => 'required|integer'
+                    'member_id' => 'required|integer',
+                    'fiscal_year' => 'required|integer',
+                    'member_type' => 'required|integer'
                 ]);
 
                 $member = FamilyMember::findOrFail($request->input('member_id'));
-                $contributionAmount = Contribution::calculateContributionForMember($member);
+                $memberType = MemberType::findOrFail($request->input('member_type'));
+
+                $age = $member->getAge();
+                $type = $memberType["type"] ?? null;
+
+                $contributionAmount = Contribution::calculateContributionForMember($age, $type);
 
                 // Check if a contribution already exists for the member in the specified fiscal year
                 $contributionForFiscalYear = Contribution::where('family_member_id', $member['id'])
@@ -138,7 +148,7 @@ class FamilyMemberController extends Controller
                 // Add contribution for member
                 $contribution = new Contribution();
                 $contribution['age'] = $member->getAge();
-                $contribution['member_type_id'] = null; // @TODO
+                $contribution['member_type_id'] = $memberType["id"];
                 $contribution['amount'] = $contributionAmount;
                 $contribution['fiscal_year'] = $request->input('fiscal_year');
                 $contribution['family_member_id'] = $member["id"];
@@ -152,11 +162,17 @@ class FamilyMemberController extends Controller
                 return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
             }
         }
-        catch (Exception $ex)
+        catch (\InvalidArgumentException $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => $ex->getMessage()]);
+                
+            return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+        }
+        catch (\Exception $ex)
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
-            return redirect()->route('families.view', ['id' => $request->route('id')]);
+            return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
         }
     }
 

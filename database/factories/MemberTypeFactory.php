@@ -9,19 +9,17 @@ class MemberTypeFactory extends Factory
 {
     protected $model = MemberType::class;
 
-    protected static $enumValues = ['youth', 'aspirant', 'junior', 'senior', 'elder'];
-
     public function definition()
     {
         return [
-            'type' => null,  // The status will be set outside the definition
+            'type' => null,
         ];
     }
 
     // A method to generate all enum values in the factory
     public function withEnumValues()
     {
-        return collect(self::$enumValues)->map(function ($enumValue) {
+        return collect(MemberType::getMemberTypes())->map(function ($enumValue) {
             return $this->state([
                 'type' => $enumValue
             ]);
