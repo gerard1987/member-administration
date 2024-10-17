@@ -5,6 +5,7 @@
     <h1>Families and Members</h1>
     <hr>
 
+    <?php if (\Auth::user()->name === 'secretary'): ?>
     <h3>Create family</h3>
     <div class="row">
         <div class="col-md-12">
@@ -34,6 +35,7 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
     <br>
 
     @if($families->isEmpty())
@@ -54,8 +56,9 @@
                                     <p>Contributie: €0</p>
                                     <div class="d-flex flex-wrap align-items-end col-md-12">
                                         <div class="col-md-4">
-                                            <p class="mb-0"><a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">Edit</a></p>
+                                            <p class="mb-0"><a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">View</a></p>
                                         </div>
+                                        <?php if (\Auth::user()->name === 'secretary'): ?>
                                         <div class="col-md-8">
                                             <form action="{{ route('families.delete', $family['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this family?');">
                                                 @csrf
@@ -63,6 +66,7 @@
                                                 <button type="submit" class="btn btn-warning text-nowrap">Delete Family</button>
                                             </form>
                                         </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

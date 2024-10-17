@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Family;
+use App\Models\FamilyMember;
 
 class FamilyController extends Controller
 {
@@ -19,6 +20,10 @@ class FamilyController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             // Check if the request method is POST
             if ($request->isMethod('post')) {
                 // Validate the form inputs
@@ -48,19 +53,24 @@ class FamilyController extends Controller
     public function view($id)
     {
         $family = Family::with('familyMembers')->find($id);
+        $familyRoles = FamilyMember::getRoles();
 
         if (!$family) {
             abort(404, 'Family not found');
         }
 
         // Return the view with the family data
-        return view('families.view', compact('family'));
+        return view('families.view', compact('family', 'familyRoles'));
     }
 
     public function edit(Request $request)
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             // Check if the request method is POST
             if ($request->isMethod('post')) {
 
@@ -92,6 +102,10 @@ class FamilyController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             $family = Family::with('familyMembers')->find($id);
             if (!$family) {
                 abort(404, 'Family not found');

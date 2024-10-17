@@ -45,9 +45,12 @@
                             <input type="hidden" id="family_id" name="family_id" value ="<?= $member['family_id']; ?>" class="form-control" required>
                         
                             <!-- Submit Button -->
+                            <?php if (\Auth::user()->name === 'secretary'): ?>
                             <button type="submit" class="btn btn-warning">Edit member</button>
+                            <?php endif; ?>
                         </form>
                     </div>
+                    <?php if (\Auth::user()->name === 'treasurer'): ?>
                     <div class="card-body">
                         <h2 class="card-title"><strong>Submit contribution paid: </strong></h2>
                         <form action="{{ route('families.members.add.contribution', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
@@ -87,6 +90,7 @@
                             <button type="submit" class="btn btn-warning">Submit</button>
                         </form>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

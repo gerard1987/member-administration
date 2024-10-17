@@ -22,19 +22,19 @@ class RolesTableSeeder extends Seeder
 
         // Create users with specific roles
         User::factory()->create([
-            'name' => 'Secretary User',
+            'name' => 'secretary',
             'email' => 'secretary@example.com',
             'role_id' => $secretary->id,
         ]);
 
         User::factory()->create([
-            'name' => 'Treasurer User',
+            'name' => 'treasurer',
             'email' => 'treasurer@example.com',
             'role_id' => $treasurer->id,
         ]);
 
         User::factory()->create([
-            'name' => 'Regular User',
+            'name' => 'user',
             'email' => 'user@example.com',
             'role_id' => $userRole->id,
         ]);

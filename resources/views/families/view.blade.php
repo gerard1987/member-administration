@@ -37,13 +37,16 @@
     
                                 <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
                             
+                                <?php if (\Auth::user()->name === 'secretary'): ?>
                                 <!-- Submit Button -->
                                 <button type="submit" class="btn btn-warning">Edit family</button>
+                                <?php endif; ?>
                             </form>
                         </div>
                         
                         <hr>
 
+                        <?php if (\Auth::user()->name === 'secretary'): ?>
                         <h3>Add member</h3>
                         <div class="row">
                             <div class="col-md-8">
@@ -64,11 +67,17 @@
                                                 <label for="address">Date of birth:</label>
                                                 <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
                                             </div>
-
-                                            <!-- Address Input -->
+                                            
+                                            <!-- Family roles Input -->
                                             <div class="form-group">
-                                                <label for="address">Member type id:</label>
-                                                <input type="number" id="member_type_id" name="member_type_id" class="form-control" required>
+                                                <label for="name">Family role:</label>
+                                                <select name="family_role" id="family_role" class="form-control" required>
+                                                    @if (!empty($familyRoles))
+                                                        @foreach ($familyRoles as $k => $role)
+                                                            <option value="{{ $role }}">{{ $role }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
                                             <br>
@@ -85,6 +94,7 @@
                         <br>
 
                         <hr>
+                        <?php endif; ?>
 
                         <h3>Members</h3>
                         <div class="d-flex align-items-center">
@@ -94,14 +104,15 @@
                                         <h2 class="card-title">{{ $member['name'] }}</h2>
                                         <p class="card-text"><strong>Birthday:</strong> {{ $member['date_of_birth']  }}</p>
                                         <p class="card-text"><strong>Family type:</strong> {{ $member['family_role']  }}</p>
-                                        <p class="card-text"><strong>Member id:</strong> {{ $member['member_type_id']  }}</p>
                                         <p>
-                                            <a href="{{ route('families.members.view',  [$family['id'], $member['id']]) }}" class="btn btn-primary">Edit</a>
+                                            <a href="{{ route('families.members.view',  [$family['id'], $member['id']]) }}" class="btn btn-primary">View</a>
+                                            <?php if (\Auth::user()->name === 'secretary'): ?>
                                             <form action="{{ route('families.members.delete', [$family['id'], $member['id']]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this member?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-warning">Delete</button>
                                             </form>
+                                            <?php endif; ?>
                                         </p>
                                     </div>
                                 </div>

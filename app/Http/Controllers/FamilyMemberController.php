@@ -30,6 +30,10 @@ class FamilyMemberController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             // Check if the request method is POST
             if ($request->isMethod('post')) {
 
@@ -37,13 +41,15 @@ class FamilyMemberController extends Controller
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
                     'date_of_birth' => 'required|string|max:255',
-                    'family_id' => 'required|integer'
+                    'family_id' => 'required|integer',
+                    'family_role' => 'required|string|max:255'
                 ]);
 
                 $member = new FamilyMember();
                 $member['name'] = $request->input('name');
                 $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
                 $member['family_id'] = $request->input('family_id');
+                $member['family_role'] = $request->input('family_role');
                 $member->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family member created successfully!']);
@@ -63,6 +69,10 @@ class FamilyMemberController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             // Check if the request method is POST
             if ($request->isMethod('post')) {
 
@@ -95,6 +105,10 @@ class FamilyMemberController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'secretary') {
+                abort(403, 'Unauthorized action.');
+            }
+
             $member = FamilyMember::find($member_id);
             if (!$member) {
                 abort(404, 'Family not found');
@@ -117,6 +131,10 @@ class FamilyMemberController extends Controller
     {
         try 
         {
+            if (\Auth::user()->name !== 'treasurer') {
+                abort(403, 'Unauthorized action.');
+            }
+
             // Check if the request method is POST
             if ($request->isMethod('post')) {
 
