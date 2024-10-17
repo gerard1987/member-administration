@@ -12,6 +12,7 @@
 
                         <h2 class="card-title"><strong>Family:</strong> {{ $family['name'] }}</h2>
                         <p class="card-text"><strong>Address:</strong> {{ $family['adress']  }}</p>
+                        <p>Contributie: €<?= $family->getTotalContributions(); ?></p>
 
                         <hr>
 
@@ -104,6 +105,7 @@
                                         <h2 class="card-title">{{ $member['name'] }}</h2>
                                         <p class="card-text"><strong>Birthday:</strong> {{ $member['date_of_birth']  }}</p>
                                         <p class="card-text"><strong>Family type:</strong> {{ $member['family_role']  }}</p>
+                                        <p>Contribution paid: <?= $member->getTotalContribution(); ?></p>
                                         <p>
                                             <a href="{{ route('families.members.view',  [$family['id'], $member['id']]) }}" class="btn btn-primary">View</a>
                                             <?php if (\Auth::user()->name === 'secretary'): ?>

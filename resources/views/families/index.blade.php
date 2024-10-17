@@ -53,7 +53,7 @@
                                     <p class="card-text"><strong>Address:</strong> {{ $family['adress'] }}</p>
                                 </div>
                                 <div class="d-flex flex-wrap col-md-4">
-                                    <p>Contributie: €0</p>
+                                    <p>Contributie: €<?= $family->getTotalContributions(); ?></p>
                                     <div class="d-flex flex-wrap align-items-end col-md-12">
                                         <div class="col-md-4">
                                             <p class="mb-0"><a href="{{ route('families.view', $family['id']) }}" class="btn btn-primary">View</a></p>

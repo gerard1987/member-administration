@@ -11,6 +11,7 @@
                     <div class="card-body">
                         <h2 class="card-title"><strong>Member: </strong> {{ $member['name'] }}</h2>
                         <h3>Age: <?= $member->getAge(); ?></h3>
+                        <h3>Contribution paid: €<?= $member->getTotalContribution(); ?></h3>
                         <form action="{{ route('families.members.edit', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
                             @csrf
                             @method('POST')

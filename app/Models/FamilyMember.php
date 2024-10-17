@@ -45,4 +45,20 @@ class FamilyMember extends Model
     {
         return self::$roles;
     }
+
+    /**
+     * Get all contributions for this family member.
+     */
+    public function contributions()
+    {
+        return $this->hasMany(Contribution::class, 'family_member_id');
+    }
+
+     /**
+     * Get the total contribution for this family member.
+     */
+    public function getTotalContribution()
+    {
+        return $this->contributions()->sum('amount');
+    }
 }

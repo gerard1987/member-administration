@@ -21,4 +21,20 @@ class Family extends Model
     {
         return $this->hasMany(FamilyMember::class);
     }
+
+    /**
+     * Get the total amount of contributions from all family members.
+     */
+    public function getTotalContributions()
+    {
+        $total = 0;
+    
+        $familyMembers = $this->familyMembers()->get();
+        foreach($familyMembers as $member)
+        {
+            $total += $member->contributions->sum('amount');
+        }
+    
+        return $total;
+    }
 }
