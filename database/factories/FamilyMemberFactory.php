@@ -20,35 +20,17 @@ class FamilyMemberFactory extends Factory
         $member = new FamilyMember(['date_of_birth' => $dateOfBirth]);
         $age = $member->getAge();
 
-        // Determine the member type based on the age
-        $memberTypeId = $this->getMemberTypeByAge($age);
-        $familyType = $this->getFamilyTypeByAge($age);
+        $familyRole = $this->getFamilyRoleByAge($age);
 
         return [
             'name' => $this->faker->firstName,
             'date_of_birth' => $dateOfBirth,
-            'member_type_id' => $memberTypeId,
             'family_id' => Family::factory(),
-            'family_type' => $familyType
+            'family_role' => $familyRole
         ];
     }
 
-    private function getMemberTypeByAge($age)
-    {
-        if ($age < 8) {
-            return 1; // Youth
-        } elseif ($age >= 8 && $age <= 12) {
-            return 2; // Aspirant
-        } elseif ($age >= 13 && $age <= 17) {
-            return 3; // Junior
-        } elseif ($age >= 18 && $age <= 50) {
-            return 4; // Senior
-        } else {
-            return 5; // Elder
-        }
-    }
-
-    private function getFamilyTypeByAge($age)
+    private function getFamilyRoleByAge($age)
     {
         if ($age <= 21){
             return rand(0, 1) ? 'Son' : 'Daughter';

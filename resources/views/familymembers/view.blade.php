@@ -29,13 +29,7 @@
                             <!-- Family type Input -->
                             <div class="form-group">
                                 <label for="name">Family type:</label>
-                                <input type="text" id="name" name="name" value="<?= $member['family_type']; ?>" class="form-control" required>
-                            </div>
-
-                            <!-- Member type Input -->
-                            <div class="form-group">
-                                <label for="address">Member type:</label>
-                                <input type="text" id="member_type_id" name="member_type_id" value="<?= $member["memberType"]["type"]; ?>" class="form-control" required>
+                                <input type="text" id="name" name="name" value="<?= $member['family_role']; ?>" class="form-control" required>
                             </div>
 
                             <br>

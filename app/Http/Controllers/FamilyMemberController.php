@@ -11,7 +11,7 @@ class FamilyMemberController extends Controller
 {
     public function view($family_id, $member_id)
     {
-        $member = FamilyMember::with('memberType')->find($member_id);
+        $member = FamilyMember::find($member_id);
         if (!$member) {
             abort(404, 'Family not found');
         }
@@ -33,14 +33,12 @@ class FamilyMemberController extends Controller
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
                     'date_of_birth' => 'required|string|max:255',
-                    'member_type_id' => 'required|integer',
                     'family_id' => 'required|integer'
                 ]);
 
                 $member = new FamilyMember();
                 $member['name'] = $request->input('name');
                 $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $member['member_type_id'] = $request->input('member_type_id');
                 $member['family_id'] = $request->input('family_id');
                 $member->save();
 
@@ -69,13 +67,11 @@ class FamilyMemberController extends Controller
                     'member_id' => 'required|integer',
                     'name' => 'required|string|max:255',
                     'date_of_birth' => 'required|string|max:255',
-                    'member_type_id' => 'required|integer'
                 ]);
 
                 $member = FamilyMember::find($request->input('member_id'));
                 $member['name'] = $request->input('name');
                 $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $member['member_type_id'] = $request->input('member_type_id');
                 $member->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
@@ -142,7 +138,7 @@ class FamilyMemberController extends Controller
                 // Add contribution for member
                 $contribution = new Contribution();
                 $contribution['age'] = $member->getAge();
-                $contribution['member_type_id'] = $member['member_type_id'];
+                $contribution['member_type_id'] = null; // @TODO
                 $contribution['amount'] = $contributionAmount;
                 $contribution['fiscal_year'] = $request->input('fiscal_year');
                 $contribution['family_member_id'] = $member["id"];

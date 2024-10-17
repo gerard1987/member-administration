@@ -10,10 +10,4 @@ class MemberType extends Model
     use HasFactory;
 
     protected $fillable = ['name']; // Add other fields as needed
-
-    // Define the relationship back to FamilyMember if needed
-    public function familyMembers()
-    {
-        return $this->hasMany(FamilyMember::class);
-    }
 }

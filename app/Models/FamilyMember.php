@@ -11,15 +11,14 @@ class FamilyMember extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'date_of_birth', 'family_type', 'family_id', 'member_type_id'];
+    protected $fillable = ['name', 'date_of_birth', 'family_role', 'family_id'];
 
     public $id;
     public $familyId;
 
     public $name;
     public $dateOfBirth;
-    public $familyType;
-    public $memberTypeId;
+    public $familyRole;
 
 
     /**
@@ -28,14 +27,6 @@ class FamilyMember extends Model
     public function family()
     {
         return $this->belongsTo(Family::class);
-    }
-
-    /**
-     * Get the member type that this family member belongs to.
-     */
-    public function memberType()
-    {
-        return $this->belongsTo(MemberType::class);
     }
 
     public function getAge()
