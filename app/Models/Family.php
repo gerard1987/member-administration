@@ -9,11 +9,6 @@ class Family extends Model
 {
     use HasFactory;
 
-    public $id;
-    public $name;
-    public $adress;
-    public $familyMembers;
-
     /**
      * Get the family members for the family.
      */

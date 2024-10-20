@@ -18,9 +18,6 @@
                         <a class="nav-link" href="/">Families</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contributions</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
                 </ul>

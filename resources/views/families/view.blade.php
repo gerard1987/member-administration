@@ -12,7 +12,7 @@
 
                         <h2 class="card-title"><strong>Family:</strong> {{ $family['name'] }}</h2>
                         <p class="card-text"><strong>Address:</strong> {{ $family['adress']  }}</p>
-                        <p>Contributie: €<?= $family->getTotalContributions(); ?></p>
+                        <p>Contributie: €{{ $family->getTotalContributions() }}</p>
 
                         <hr>
 
@@ -25,29 +25,29 @@
                                 <!-- Name Input -->
                                 <div class="form-group">
                                     <label for="name">Name:</label>
-                                    <input type="text" id="name" name="name" value="<?= $family['name']; ?>" class="form-control" required>
+                                    <input type="text" id="name" name="name" value="{{ $family['name'] }}" class="form-control" required>
                                 </div>
                             
                                 <!-- Address Input -->
                                 <div class="form-group">
                                     <label for="address">Address:</label>
-                                    <input type="text" id="adress" name="adress" value="<?= $family['adress']; ?>" class="form-control" required>
+                                    <input type="text" id="adress" name="adress" value="{{ $family['adress'] }}" class="form-control" required>
                                 </div>
     
                                 <br>
     
-                                <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
+                                <input type="hidden" id="family_id" name="family_id" value ="{{ $family['id'] }}" class="form-control" required>
                             
-                                <?php if (\Auth::user()->name === 'secretary'): ?>
+                                @if (\Auth::user()->name === 'secretary')
                                 <!-- Submit Button -->
                                 <button type="submit" class="btn btn-warning">Edit family</button>
-                                <?php endif; ?>
+                                @endif
                             </form>
                         </div>
                         
                         <hr>
 
-                        <?php if (\Auth::user()->name === 'secretary'): ?>
+                        @if (\Auth::user()->name === 'secretary')
                         <h3>Add member</h3>
                         <div class="row">
                             <div class="col-md-8">
@@ -74,7 +74,7 @@
                                                 <label for="name">Family role:</label>
                                                 <select name="family_role" id="family_role" class="form-control" required>
                                                     @if (!empty($familyRoles))
-                                                        @foreach ($familyRoles as $k => $role)
+                                                        @foreach ($familyRoles as $role)
                                                             <option value="{{ $role }}">{{ $role }}</option>
                                                         @endforeach
                                                     @endif
@@ -83,7 +83,7 @@
 
                                             <br>
 
-                                            <input type="hidden" id="family_id" name="family_id" value ="<?= $family['id']; ?>" class="form-control" required>
+                                            <input type="hidden" id="family_id" name="family_id" value ="{{ $family['id'] }}" class="form-control" required>
                                         
                                             <!-- Submit Button -->
                                             <button type="submit" class="btn btn-warning">Create family member</button>
@@ -95,10 +95,9 @@
                         <br>
 
                         <hr>
-                        <?php endif; ?>
+                        @endif
 
                         <h3>Members</h3>
-                        <div class="d-flex align-items-center">
                                 @foreach ($family['familyMembers'] as $member)
                                 <div class="card mb-6 shadow-sm">
                                     <div class="card-body">

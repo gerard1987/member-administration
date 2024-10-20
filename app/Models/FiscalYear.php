@@ -9,6 +9,8 @@ class FiscalYear extends Model
 {
     use HasFactory;
 
-    public int $id;
-    public int $year;
+    public function contributions()
+    {
+        return $this->hasMany(Contribution::class, 'fiscal_year');
+    }
 }

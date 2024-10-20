@@ -22,7 +22,6 @@ class FamilyMemberController extends Controller
         $fiscalYears = FiscalYear::select('id', 'year')->get();
         $memberTypes = MemberType::all();
 
-        // Return the view with the family data
         return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
     }
 

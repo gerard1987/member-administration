@@ -53,7 +53,7 @@
                     </div>
                     <?php if (\Auth::user()->name === 'treasurer'): ?>
                     <div class="card-body">
-                        <h2 class="card-title"><strong>Submit contribution paid: </strong></h2>
+                        <h2 class="card-title"><strong>Add contribution: </strong></h2>
                         <form action="{{ route('families.members.add.contribution', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
                             @csrf
                             @method('POST')
@@ -91,6 +91,46 @@
                             <button type="submit" class="btn btn-warning">Submit</button>
                         </form>
                     </div>
+
+                    <div class="card-body">
+                        <h4>Contributions</h4>
+
+                        @if ($member->contributions->isEmpty())
+                            <p>No contributions found.</p>
+                        @else
+                            @foreach ($member->contributions as $contribution)
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <!-- MemberType -->
+                                            <div class="col-6 col-md-3">
+                                                <strong>Member type:</strong> 
+                                                <p>{{ $contribution->memberType->type }}</p>
+                                            </div>
+            
+                                            <!-- Amount -->
+                                            <div class="col-6 col-md-3">
+                                                <strong>Amount:</strong> 
+                                                <p>€{{ $contribution->amount }}</p>
+                                            </div>
+            
+                                            <!-- Fiscal Year -->
+                                            <div class="col-6 col-md-3">
+                                                <strong>Fiscal Year:</strong> 
+                                                <p>{{ $contribution->fiscalYear->year ?? 'N/A' }}</p>
+                                            </div>
+            
+                                            <!-- Date -->
+                                            <div class="col-6 col-md-3">
+                                                <strong>Date:</strong> 
+                                                <p>{{ $contribution->created_at->format('d-m-Y') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>                  
                     <?php endif; ?>
                 </div>
             </div>

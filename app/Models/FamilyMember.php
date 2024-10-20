@@ -14,13 +14,6 @@ class FamilyMember extends Model
     protected $fillable = ['name', 'date_of_birth', 'family_role', 'family_id'];
     protected static $roles = ['Father', 'Mother', 'Son', 'Daughter'];
 
-    public $id;
-    public $familyId;
-
-    public $name;
-    public $dateOfBirth;
-    public $familyRole;
-
 
     /**
      * Get the family that familyMember belongs to.

@@ -6,19 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\MemberType;
+use App\Models\FamilyMember;
+use App\Models\FiscalYear;
 
 class Contribution extends Model
 {
     use HasFactory;
 
     protected $fillable = ['age', 'member_type_id', 'amount', 'fiscal_year', 'family_member_id'];
-
-    public int $id;
-    public int $age;
-    public int $memberTypeId;
-    public float $amount;
-    public int $fiscalYear;
-    public int $familyMemberId;
 
     private const BASEAMOUNT = 100;
 
@@ -50,6 +45,16 @@ class Contribution extends Model
     public function familyMember()
     {
         return $this->belongsTo(FamilyMember::class, 'family_member_id');
+    }
+
+    public function fiscalYear()
+    {
+        return $this->belongsTo(FiscalYear::class, 'fiscal_year');
+    }
+
+    public function memberType()
+    {
+        return $this->belongsTo(MemberType::class, 'member_type_id');
     }
 
 
