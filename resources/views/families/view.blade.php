@@ -98,8 +98,9 @@
                         @endif
 
                         <h3>Members</h3>
+                        <div class="d-flex align-items-center">
                                 @foreach ($family['familyMembers'] as $member)
-                                <div class="card mb-6 shadow-sm">
+                                <div class="card mb-6 m-1 shadow-sm">
                                     <div class="card-body">
                                         <h2 class="card-title">{{ $member['name'] }}</h2>
                                         <p class="card-text"><strong>Birthday:</strong> {{ $member['date_of_birth']  }}</p>
@@ -118,7 +119,6 @@
                                     </div>
                                 </div>
                                 @endforeach
-                            </a>
                         </div>
                     </div>
                 </div>
