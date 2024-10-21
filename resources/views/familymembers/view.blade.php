@@ -144,6 +144,12 @@
                         @endif
                     </div>                  
                     @endif
+
+                    <br>
+                    <div class="card-body">
+                        <button onclick="window.history.back();" class="btn btn-secondary">Back</button>
+                    </div>
+
                 </div>
             </div>
         </div>
