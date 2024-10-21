@@ -33,7 +33,7 @@
 
     <!-- Footer -->
     <footer class="text-center mt-5 py-4 bg-light">
-        <p>&copy; 2024 My Application</p>
+        <p>&copy; 2024 Member administration</p>
     </footer>
 
     <!-- Bootstrap JS or other scripts -->

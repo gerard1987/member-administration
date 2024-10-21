@@ -10,10 +10,16 @@ class FamilyController extends Controller
 {
     public function index()
     {
-        // Fetch all families with their associated family members
-        $families = Family::with('familyMembers')->get();
-        
-        return view('families.index', compact('families'));
+        try 
+        {
+            $families = Family::with('familyMembers')->get();
+            
+            return view('families.index', compact('families'));
+        }
+        catch(Exception $ex)
+        {
+            return redirect()->back();
+        }
     }
 
     public function create(Request $request)
@@ -24,8 +30,8 @@ class FamilyController extends Controller
                 abort(403, 'Unauthorized action.');
             }
 
-            // Check if the request method is POST
-            if ($request->isMethod('post')) {
+            if ($request->isMethod('post')) 
+            {
                 // Validate the form inputs
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
@@ -33,8 +39,8 @@ class FamilyController extends Controller
                 ]);
 
                 $family = new Family();
-                $family['name'] = $request->input('name');
-                $family['adress'] = $request->input('adress');
+                $family->name = $request->input('name');
+                $family->adress = $request->input('adress');
                 $family->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family created successfully!']);
@@ -52,15 +58,18 @@ class FamilyController extends Controller
 
     public function view($id)
     {
-        $family = Family::with('familyMembers')->find($id);
-        $familyRoles = FamilyMember::getRoles();
-
-        if (!$family) {
-            abort(404, 'Family not found');
+        try 
+        {
+            $family = Family::with('familyMembers')->findOrFail($id);
+            $familyRoles = FamilyMember::getRoles();
+    
+            return view('families.view', compact('family', 'familyRoles'));
         }
-
-        // Return the view with the family data
-        return view('families.view', compact('family', 'familyRoles'));
+        catch(Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+            return redirect()->back();
+        }
     }
 
     public function edit(Request $request)
@@ -80,21 +89,21 @@ class FamilyController extends Controller
                     'adress' => 'required|string|max:255',
                 ]);
 
-                $family = Family::find($request->input('family_id'));
-                $family['name'] = $request->input('name');
-                $family['adress'] =  $request->input('adress');
+                $family = Family::findOrFail($request->input('family_id'));
+                $family->name = $request->input('name');
+                $family->adress =  $request->input('adress');
                 $family->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
                 
-                return redirect()->route('families.view', ['id' => $family['id']]);
+                return redirect()->back();
             }
         }
         catch (Exception $ex)
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
-            return redirect()->route('families.view', ['id' => $request->route('id')]);
+            return redirect()->back();
         }
     }    
 
@@ -106,12 +115,8 @@ class FamilyController extends Controller
                 abort(403, 'Unauthorized action.');
             }
 
-            $family = Family::with('familyMembers')->find($id);
-            if (!$family) {
-                abort(404, 'Family not found');
-            }
-        
-            $family->familyMembers()->delete();  // Delete family members if necessary
+            $family = Family::with('familyMembers')->findOrFail($id);        
+            $family->familyMembers()->delete();
             $family->delete();
         
             session()->flash('status', ['type' => 'success', 'message' => 'Family has been successfully deleted!']);

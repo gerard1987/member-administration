@@ -9,9 +9,6 @@ class Family extends Model
 {
     use HasFactory;
 
-    /**
-     * Get the family members for the family.
-     */
     public function familyMembers()
     {
         return $this->hasMany(FamilyMember::class);

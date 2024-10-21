@@ -19,24 +19,30 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try 
+        {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+    
+            // Attempt to log the user in
+            $credentials = $request->only('email', 'password');
+    
+            if (Auth::attempt($credentials, $request->filled('remember'))) {
+                return redirect()->intended(route('families.index'));
+            }
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
         }
-
-        // Attempt to log the user in
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            return redirect()->intended(route('families.index'));
+        catch(Exception $ex)
+        {
+            return redirect()->back();
         }
-
-        // If authentication fails, redirect back with an error message
-        return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
     }
 
     public function logout(Request $request)
@@ -52,27 +58,34 @@ class AuthController extends Controller
     
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try 
+        {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+        
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
     
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            // We only create users with the role `user` on registering 
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => Role::where('name', 'user')->first()->id,
+            ]);
+        
+            // Log the user in
+            Auth::login($user);
+        
+            return redirect()->route('families.index');
         }
-
-        // We only create users with the user role on registering 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
-    
-        // Log the user in
-        Auth::login($user);
-    
-        return redirect()->route('families.index');
+        catch(Exception $ex)
+        {
+            return redirect()->back();
+        }
     }
 }

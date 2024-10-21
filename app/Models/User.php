@@ -22,7 +22,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // A user belongs to a role
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');

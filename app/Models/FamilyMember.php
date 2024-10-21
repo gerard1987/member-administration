@@ -15,14 +15,15 @@ class FamilyMember extends Model
     protected static $roles = ['Father', 'Mother', 'Son', 'Daughter'];
 
 
-    /**
-     * Get the family that familyMember belongs to.
-     */
     public function family()
     {
         return $this->belongsTo(Family::class);
     }
 
+    /**
+     * Returns the age determined by the members date of birth
+     * 
+     */
     public function getAge()
     {
         $birthdateDateTime = new DateTime($this->date_of_birth);
@@ -39,9 +40,6 @@ class FamilyMember extends Model
         return self::$roles;
     }
 
-    /**
-     * Get all contributions for this family member.
-     */
     public function contributions()
     {
         return $this->hasMany(Contribution::class, 'family_member_id');

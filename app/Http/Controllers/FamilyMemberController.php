@@ -13,16 +13,21 @@ class FamilyMemberController extends Controller
 {
     public function view($family_id, $member_id)
     {
-        $member = FamilyMember::find($member_id);
-        if (!$member) {
-            abort(404, 'Family not found');
+        try
+        {
+            $member = FamilyMember::findOrFail($member_id);
+            $familyRoles = FamilyMember::getRoles();
+            $fiscalYears = FiscalYear::select('id', 'year')->get();
+            $memberTypes = MemberType::all();
+    
+            return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
         }
-
-        $familyRoles = FamilyMember::getRoles();
-        $fiscalYears = FiscalYear::select('id', 'year')->get();
-        $memberTypes = MemberType::all();
-
-        return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
+        catch(Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+                
+            return redirect()->back();
+        }
     }
 
     public function create(Request $request)
@@ -45,10 +50,10 @@ class FamilyMemberController extends Controller
                 ]);
 
                 $member = new FamilyMember();
-                $member['name'] = $request->input('name');
-                $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $member['family_id'] = $request->input('family_id');
-                $member['family_role'] = $request->input('family_role');
+                $member->name = $request->input('name');
+                $member->date_of_birth =  date('Y-m-d', strtotime($request->input('date_of_birth')));
+                $member->family_id = $request->input('family_id');
+                $member->family_role = $request->input('family_role');
                 $member->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family member created successfully!']);
@@ -60,7 +65,7 @@ class FamilyMemberController extends Controller
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
-            return redirect()->route('families.view', ['id' => $request->route('id')]);
+            return redirect()->back();
         }
     }
 
@@ -83,8 +88,8 @@ class FamilyMemberController extends Controller
                 ]);
 
                 $member = FamilyMember::find($request->input('member_id'));
-                $member['name'] = $request->input('name');
-                $member['date_of_birth'] =  date('Y-m-d', strtotime($request->input('date_of_birth')));
+                $member->name = $request->input('name');
+                $member->date_of_birth =  date('Y-m-d', strtotime($request->input('date_of_birth')));
                 $member->save();
 
                 session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
@@ -96,7 +101,7 @@ class FamilyMemberController extends Controller
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
-            return redirect()->route('families.view', ['id' => $request->route('id')]);
+            return redirect()->back();
         }
     }
 
@@ -108,11 +113,7 @@ class FamilyMemberController extends Controller
                 abort(403, 'Unauthorized action.');
             }
 
-            $member = FamilyMember::find($member_id);
-            if (!$member) {
-                abort(404, 'Family not found');
-            }
-        
+            $member = FamilyMember::findOrFail($member_id);
             $member->delete();
         
             session()->flash('status', ['type' => 'success', 'message' => 'Family member has been successfully deleted!']);
@@ -147,49 +148,47 @@ class FamilyMemberController extends Controller
                 $member = FamilyMember::findOrFail($request->input('member_id'));
                 $memberType = MemberType::findOrFail($request->input('member_type'));
 
-                $age = $member->getAge();
-                $type = $memberType["type"] ?? null;
-
-                $contributionAmount = Contribution::calculateContributionForMember($age, $type);
-
                 // Check if a contribution already exists for the member in the specified fiscal year
-                $contributionForFiscalYear = Contribution::where('family_member_id', $member['id'])
+                $contributionForFiscalYear = Contribution::where('family_member_id', $member->id)
                     ->where('fiscal_year', $request->input('fiscal_year'))
                     ->first();
                 
                 if (!empty($contributionForFiscalYear)) {
                     session()->flash('status', ['type' => 'danger', 'message' => 'Family member contribution already added for fiscal year']);
-                    return redirect()->route('families.members.view', ['family_id' => $member->family_id, 'member_id' => $member['id']]);
+                    return redirect()->back();
                 }
+
+                $age = $member->getAge();
+                $type = $memberType->type ?? null;
+                $contributionAmount = Contribution::calculateContributionForMember($age, $type);
 
                 // Add contribution for member
                 $contribution = new Contribution();
-                $contribution['age'] = $member->getAge();
-                $contribution['member_type_id'] = $memberType["id"];
-                $contribution['amount'] = $contributionAmount;
-                $contribution['fiscal_year'] = $request->input('fiscal_year');
-                $contribution['family_member_id'] = $member["id"];
+                $contribution->age = $member->getAge();
+                $contribution->member_type_id = $memberType->id;
+                $contribution->amount = $contributionAmount;
+                $contribution->fiscal_year = $request->input('fiscal_year');
+                $contribution->family_member_id = $member->id;
 
-                // Save the contribution record to the database
+                // Save the contribution
                 $contribution->save();
 
-                // Set a success flash message and redirect to the view page
                 session()->flash('status', ['type' => 'success', 'message' => 'Contribution added successfully!']);
                 
-                return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+                return redirect()->back();
             }
         }
         catch (\InvalidArgumentException $ex)
         {
             session()->flash('status', ['type' => 'danger', 'message' => $ex->getMessage()]);
                 
-            return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+            return redirect()->back();
         }
         catch (\Exception $ex)
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
                 
-            return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+            return redirect()->back();
         }
     }
 
@@ -202,12 +201,9 @@ class FamilyMemberController extends Controller
             }
 
             $member = FamilyMember::findOrFail($member_id);
-    
-            // Find and delete the contribution
             $contribution = Contribution::findOrFail($contribution_id);
             $contribution->delete();
 
-            // Set a success flash message
             session()->flash('status', ['type' => 'success', 'message' => 'Contribution deleted successfully!']);
         }
         catch(Exception $ex)
@@ -215,8 +211,7 @@ class FamilyMemberController extends Controller
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
         }
     
-        // Redirect to the index page
-        return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+        return redirect()->back();
     }
 
 }

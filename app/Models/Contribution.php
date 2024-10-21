@@ -41,7 +41,6 @@ class Contribution extends Model
         return (int)(self::BASEAMOUNT / 100 * $percentage);
     }
 
-    // Each contribution belongs to a family member
     public function familyMember()
     {
         return $this->belongsTo(FamilyMember::class, 'family_member_id');

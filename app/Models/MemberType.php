@@ -9,7 +9,7 @@ class MemberType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name']; // Add other fields as needed
+    protected $fillable = ['type'];
     protected static $types = ['youth', 'aspirant', 'junior', 'senior', 'elder'];
 
     public static function getMemberTypes()
