@@ -193,4 +193,30 @@ class FamilyMemberController extends Controller
         }
     }
 
+    public function delete_contribution($family_id, $member_id, $contribution_id)
+    {
+        try 
+        {
+            if (\Auth::user()->name !== 'treasurer') {
+                abort(403, 'Unauthorized action.');
+            }
+
+            $member = FamilyMember::findOrFail($member_id);
+    
+            // Find and delete the contribution
+            $contribution = Contribution::findOrFail($contribution_id);
+            $contribution->delete();
+
+            // Set a success flash message
+            session()->flash('status', ['type' => 'success', 'message' => 'Contribution deleted successfully!']);
+        }
+        catch(Exception $ex)
+        {
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+        }
+    
+        // Redirect to the index page
+        return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
+    }
+
 }

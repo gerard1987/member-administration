@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'view'])->name('families.members.view');
     Route::post('/families/{id}/family_member', [FamilyMemberController::class, 'create'])->name('families.create.member');
     Route::post('/families/{family_id}/members/{member_id}/edit', [FamilyMemberController::class, 'edit'])->name('families.members.edit');
-    Route::post('/families/{family_id}/members/{member_id}/contribution', [FamilyMemberController::class, 'add_contribution'])->name('families.members.add.contribution');
     Route::delete('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'delete'])->name('families.members.delete');
+
+    Route::post('/families/{family_id}/members/{member_id}/contribution', [FamilyMemberController::class, 'add_contribution'])->name('families.members.add.contribution');
+    Route::delete('/families/{family_id}/members/{member_id}/contribution/{contribution_id}', [FamilyMemberController::class, 'delete_contribution'])->name('families.members.delete.contribution');
 });

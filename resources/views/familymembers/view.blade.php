@@ -46,12 +46,12 @@
                             <input type="hidden" id="family_id" name="family_id" value ="<?= $member['family_id']; ?>" class="form-control" required>
                         
                             <!-- Submit Button -->
-                            <?php if (\Auth::user()->name === 'secretary'): ?>
+                            @if (\Auth::user()->name === 'secretary')
                             <button type="submit" class="btn btn-warning">Edit member</button>
-                            <?php endif; ?>
+                            @endif
                         </form>
                     </div>
-                    <?php if (\Auth::user()->name === 'treasurer'): ?>
+                    @if (\Auth::user()->name === 'treasurer')
                     <div class="card-body">
                         <h2 class="card-title"><strong>Add contribution: </strong></h2>
                         <form action="{{ route('families.members.add.contribution', ['family_id' => $member['family_id'], 'member_id' => $member['id']]) }}" method="POST">
@@ -126,12 +126,22 @@
                                                 <p>{{ $contribution->created_at->format('d-m-Y') }}</p>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <p>
+                                                <form action="{{ route('families.members.delete.contribution', ['family_id' => $member->family_id, 'member_id' => $member->id, 'contribution_id' => $contribution->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this contribution?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    
+                                                    <button type="submit" class="btn btn-warning">Delete</button>
+                                                </form>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
                         @endif
                     </div>                  
-                    <?php endif; ?>
+                    @endif
                 </div>
             </div>
         </div>
