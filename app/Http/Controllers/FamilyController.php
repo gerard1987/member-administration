@@ -12,6 +12,8 @@ class FamilyController extends Controller
     {
         try 
         {
+            $msg = '';
+            
             // View
             if ($request->isMethod('get')) 
             {

@@ -14,7 +14,7 @@
                         <h3>Contribution paid: €<?= $member->getTotalContribution(); ?></h3>
                         <form action="{{ route('families.members.edit', ['family_id' => $member->family_id, 'member_id' => $member->id]) }}" method="POST">
                             @csrf
-                            @method('POST')
+                            @method('PUT')
                         
                             <!-- Name Input -->
                             <div class="form-group">

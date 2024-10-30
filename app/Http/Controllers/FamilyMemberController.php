@@ -11,35 +11,29 @@ use App\Models\MemberType;
 
 class FamilyMemberController extends Controller
 {
-    public function view($family_id, $member_id)
-    {
-        try
-        {
-            $member = FamilyMember::findOrFail($member_id);
-            $familyRoles = FamilyMember::getRoles();
-            $fiscalYears = FiscalYear::select('id', 'year')->get();
-            $memberTypes = MemberType::all();
-    
-            return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
-        }
-        catch(Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-                
-            return redirect()->back();
-        }
-    }
-
-    public function create(Request $request)
+    public function index(Request $request, $family_id = null, $member_id = null)
     {
         try 
         {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
+            $msg = '';
+
+            // View
+            if ($request->isMethod('get') && $member_id) 
+            {
+                $member = FamilyMember::findOrFail($member_id);
+                $familyRoles = FamilyMember::getRoles();
+                $fiscalYears = FiscalYear::select('id', 'year')->get();
+                $memberTypes = MemberType::all();
+        
+                return view('familymembers.view', compact('member', 'familyRoles', 'memberTypes', 'fiscalYears'));
             }
 
-            // Check if the request method is POST
-            if ($request->isMethod('post')) {
+            // Create || Update
+            if ($request->isMethod('post') || $request->isMethod('put')) 
+            {
+                if (\Auth::user()->name !== 'secretary') {
+                    abort(403, 'Unauthorized action.');
+                }
 
                 // Validate the form inputs
                 $validatedData = $request->validate([
@@ -48,83 +42,39 @@ class FamilyMemberController extends Controller
                     'family_id' => 'required|integer',
                     'family_role' => 'required|string|max:255'
                 ]);
-
-                $member = new FamilyMember();
+    
+                if ($request->isMethod('put') && $member_id) {
+                    $member = FamilyMember::findOrFail($member_id);
+                    $msg = "updated";
+                } else {
+                    $member = new FamilyMember();
+                    $msg = "created";
+                }
+    
+                // Set the member attributes and save
                 $member->name = $request->input('name');
                 $member->date_of_birth =  date('Y-m-d', strtotime($request->input('date_of_birth')));
                 $member->family_id = $request->input('family_id');
                 $member->family_role = $request->input('family_role');
                 $member->save();
-
-                session()->flash('status', ['type' => 'success', 'message' => 'Family member created successfully!']);
-                
-                return redirect()->route('families.view', ['id' => $member['family_id']]);
             }
-        }
-        catch (Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-                
+
+            // Delete
+            if($request->isMethod('delete') && $member_id){
+                $member = FamilyMember::findOrFail($member_id);
+                $member->delete();
+                $msg = "deleted";
+            }
+
+            // Flash success message
+            session()->flash('status', ['type' => 'success', 'message' => 'Familymember ' . $msg ?? '' . ' successfully!']);
             return redirect()->back();
-        }
-    }
-
-    public function edit(Request $request)
-    {
-        try 
-        {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
-            }
-
-            // Check if the request method is POST
-            if ($request->isMethod('post')) {
-
-                // Validate the form inputs
-                $validatedData = $request->validate([
-                    'member_id' => 'required|integer',
-                    'name' => 'required|string|max:255',
-                    'date_of_birth' => 'required|string|max:255',
-                ]);
-
-                $member = FamilyMember::find($request->input('member_id'));
-                $member->name = $request->input('name');
-                $member->date_of_birth =  date('Y-m-d', strtotime($request->input('date_of_birth')));
-                $member->save();
-
-                session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
-                
-                return redirect()->route('families.members.view', ['family_id' => $member['family_id'], 'member_id' => $member['id']]);
-            }
-        }
-        catch (Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-                
-            return redirect()->back();
-        }
-    }
-
-    public function delete($family_id, $member_id)
-    {
-        try 
-        {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
-            }
-
-            $member = FamilyMember::findOrFail($member_id);
-            $member->delete();
-        
-            session()->flash('status', ['type' => 'success', 'message' => 'Family member has been successfully deleted!']);
         }
         catch(Exception $ex)
         {
             session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+            return redirect()->back();
         }
-    
-        // Redirect to the index page
-        return redirect()->route('families.view', ['id' => $family_id]);
     }
 
     public function add_contribution(Request $request)

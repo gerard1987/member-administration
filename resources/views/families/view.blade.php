@@ -101,7 +101,7 @@
                             <p>No members.</p>
                         @else
                         <h3>Members</h3>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex flex-wrap align-items-center">
                                 @foreach ($family->familyMembers as $member)
                                 <div class="card mb-6 m-1 shadow-sm">
                                     <div class="card-body">
