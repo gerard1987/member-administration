@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FamilyMemberController;
+use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/login', [AuthController::class, 'login_index'])->name('login');
@@ -26,6 +27,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/families/{family_id}/members/{member_id}/edit', [FamilyMemberController::class, 'index'])->name('families.members.edit');
     Route::delete('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'index'])->name('families.members.delete');
 
-    Route::post('/families/{family_id}/members/{member_id}/contribution', [FamilyMemberController::class, 'add_contribution'])->name('families.members.add.contribution');
-    Route::delete('/families/{family_id}/members/{member_id}/contribution/{contribution_id}', [FamilyMemberController::class, 'delete_contribution'])->name('families.members.delete.contribution');
+    Route::post('/families/{family_id}/members/{member_id}/contribution', [ContributionController::class, 'index'])->name('families.members.add.contribution');
+    Route::delete('/families/{family_id}/members/{member_id}/contribution/{contribution_id}', [ContributionController::class, 'index'])->name('families.members.delete.contribution');
 });
