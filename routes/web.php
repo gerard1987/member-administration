@@ -16,10 +16,10 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [FamilyController::class, 'index']);
     Route::get('/families', [FamilyController::class, 'index'])->name('families.index');
-    Route::get('/families/{id}', [FamilyController::class, 'view'])->name('families.view');
-    Route::post('/families', [FamilyController::class, 'create'])->name('families.create');
-    Route::post('/families/{id}', [FamilyController::class, 'edit'])->name('families.edit');
-    Route::delete('/families/{id}', [FamilyController::class, 'delete'])->name('families.delete');
+    Route::get('/families/{id}', [FamilyController::class, 'index'])->name('families.view');
+    Route::post('/families', [FamilyController::class, 'index'])->name('families.create');
+    Route::put('/families/{id}', [FamilyController::class, 'index'])->name('families.edit');
+    Route::delete('/families/{id}', [FamilyController::class, 'index'])->name('families.delete');
 
     Route::get('/families/{family_id}/members/{member_id}', [FamilyMemberController::class, 'view'])->name('families.members.view');
     Route::post('/families/{id}/family_member', [FamilyMemberController::class, 'create'])->name('families.create.member');

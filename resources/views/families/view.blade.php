@@ -20,7 +20,7 @@
                         <div class="row">
                             <form action="{{ route('families.edit', ['id' => $family['id']]) }}" method="POST">
                                 @csrf
-                                @method('POST')
+                                @method('PUT')
                             
                                 <!-- Name Input -->
                                 <div class="form-group">

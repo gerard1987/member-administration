@@ -8,126 +8,69 @@ use App\Models\FamilyMember;
 
 class FamilyController extends Controller
 {
-    public function index()
+    public function index(Request $request, $id = null)
     {
         try 
         {
-            $families = Family::with('familyMembers')->get();
-            
-            return view('families.index', compact('families'));
-        }
-        catch(Exception $ex)
-        {
-            return redirect()->back();
-        }
-    }
-
-    public function create(Request $request)
-    {
-        try 
-        {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
-            }
-
-            if ($request->isMethod('post')) 
+            // View
+            if ($request->isMethod('get')) 
             {
-                // Validate the form inputs
-                $validatedData = $request->validate([
-                    'name' => 'required|string|max:255',
-                    'adress' => 'required|string|max:255',
-                ]);
+                if ($id) {
+                    $family = Family::with('familyMembers')->findOrFail($id);
+                    $familyRoles = FamilyMember::getRoles();
+            
+                    return view('families.view', compact('family', 'familyRoles'));
+                }
 
-                $family = new Family();
-                $family->name = $request->input('name');
-                $family->adress = $request->input('adress');
-                $family->save();
-
-                session()->flash('status', ['type' => 'success', 'message' => 'Family created successfully!']);
+                $families = Family::with('familyMembers');
+                $families = $families->get();
                 
-                return redirect()->route('families.index');
+                return view('families.index', compact('families'));
             }
-        }
-        catch (Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-                
-            return redirect()->route('families.index');
-        }
-    }    
 
-    public function view($id)
-    {
-        try 
-        {
-            $family = Family::with('familyMembers')->findOrFail($id);
-            $familyRoles = FamilyMember::getRoles();
+            // Create || Update
+            if ($request->isMethod('post') || $request->isMethod('put')) 
+            {
+                if (\Auth::user()->name !== 'secretary') {
+                    abort(403, 'Unauthorized action.');
+                }
     
-            return view('families.view', compact('family', 'familyRoles'));
-        }
-        catch(Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-            return redirect()->back();
-        }
-    }
-
-    public function edit(Request $request)
-    {
-        try 
-        {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
-            }
-
-            // Check if the request method is POST
-            if ($request->isMethod('post')) {
-
                 // Validate the form inputs
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
                     'adress' => 'required|string|max:255',
                 ]);
-
-                $family = Family::findOrFail($request->input('family_id'));
-                $family->name = $request->input('name');
-                $family->adress =  $request->input('adress');
+    
+                if ($request->isMethod('put') && $id) {
+                    $family = Family::findOrFail($id);
+                    $msg = "updated";
+                } else {
+                    $family = new Family();
+                    $msg = "created";
+                }
+    
+                // Set the family attributes and save
+                $family->name = $validatedData['name'];
+                $family->adress = $validatedData['adress'];
                 $family->save();
-
-                session()->flash('status', ['type' => 'success', 'message' => 'Family member edited successfully!']);
-                
-                return redirect()->back();
             }
-        }
-        catch (Exception $ex)
-        {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
-                
+
+            // Delete
+            if($request->isMethod('delete') && $id){
+                $family = Family::with('familyMembers')->findOrFail($id);
+                $family->familyMembers()->delete();
+                $family->delete();
+                $msg = "deleted";
+            }
+
+            // Flash success message
+            session()->flash('status', ['type' => 'success', 'message' => 'Family ' . $msg ?? '' . ' successfully!']);
             return redirect()->back();
-        }
-    }    
-
-    public function delete($id)
-    {
-        try 
-        {
-            if (\Auth::user()->name !== 'secretary') {
-                abort(403, 'Unauthorized action.');
-            }
-
-            $family = Family::with('familyMembers')->findOrFail($id);        
-            $family->familyMembers()->delete();
-            $family->delete();
-        
-            session()->flash('status', ['type' => 'success', 'message' => 'Family has been successfully deleted!']);
         }
         catch(Exception $ex)
         {
-            session()->flash('status', ['type' => 'danger', 'message' => 'Family could not be deleted!']);
+            session()->flash('status', ['type' => 'danger', 'message' => 'Internal server error']);
+            return redirect()->back();
         }
-
-        // Redirect to the index page
-        return redirect()->route('families.index');
     }
-
 }
