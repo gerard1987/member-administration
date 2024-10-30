@@ -57,6 +57,8 @@ class ContributionController extends Controller
 
                 // Save the contribution
                 $contribution->save();
+
+                $msg = "added";
             }
 
             // Delete

@@ -16,7 +16,7 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => bcrypt('password'), // Use a default password
+            'password' => bcrypt('zwakwachtwoord'), // Use a default password
             'role_id' => Role::inRandomOrder()->first()->id, // Assign a random role
         ];
     }
